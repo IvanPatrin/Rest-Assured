@@ -1,19 +1,25 @@
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 
+@Execution(CONCURRENT)
 public class GetTest {
     public final String URL = "https://www.freetogame.com/api/";
 
     @Test
     public void RequestError404() {
-        Specifications.installSpecification(Specifications.requestSpecification(URL), Specifications.responseSpecificationError404());
         RestAssured
                 .given()
+                .baseUri(URL)
+                .contentType(ContentType.JSON)
                 .queryParam("platform", "mobile")
                 .queryParam("tag", "mmorpg")
                 .log().all()

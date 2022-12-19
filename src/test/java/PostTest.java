@@ -5,11 +5,14 @@ import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
-
+@Execution(CONCURRENT)
 public class PostTest {
     public static String sucLoginJson="{\n" +
             "    \"email\": \"eve.holt@reqres.in\",\n"+
@@ -62,9 +65,9 @@ public class PostTest {
 
     @Test
     public void CreateOk200() {
-        Specifications.installSpecification(Specifications.requestSpecification(URL),Specifications.responseSpecificationOK201());
         RestAssured
                 .given()
+                .baseUri(URL)
                 .body(sucCreate)
                 .log().all()
                 .when()
@@ -75,9 +78,9 @@ public class PostTest {
     }
     @Test
     public void CreateError400() {
-        Specifications.installSpecification(Specifications.requestSpecification(URL),Specifications.responseSpecificationError400());
         RestAssured
                 .given()
+                .baseUri(URL)
                 .body(unSucCreate)
                 .log().all()
                 .when()
